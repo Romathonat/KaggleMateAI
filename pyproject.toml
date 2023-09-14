@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "ml-kaggle"
+version = "0.1.0"
+description = ""
+authors = ["rma <rma@infologic.fr>"]
+readme = "README.md"
+packages = [{include = "ml_kaggle"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+kaggle = "^1.5.16"
+ipykernel = "^6.25.2"
+langchain = {extras = ["llms"], version = "^0.0.288"}
+pandas = "^2.1.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
