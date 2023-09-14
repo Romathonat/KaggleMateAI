@@ -23,20 +23,27 @@ pip install -r requirements.txt
 
 ## Usage
 
-```python
+KaggleMateAI offers a conversational CLI experience. To start interacting with the tool, simply run:
 
-from kagglemateai import KaggleMateAI
-
-# Initialize
-km = KaggleMateAI(api_key="your_kaggle_api_key")
-
-# Find competitions
-competitions = km.find_competitions("your_problem_description")
-
-# Get solutions
-solutions = km.get_solutions(competitions)
+``` bash
+kagglemateai
 ```
 
+Example interaction:
+
+    **KaggleMateAI**: Give me the description of the problem you want to tackle
+    **You**: I'm working on a text classification problem with this and that contraint ...
+    **KaggleMateAI**: Here are some Kaggle competitions that might be relevant [Title - Descriptions - URL]
+    ...
+    Which one do you want to choose ?
+    **You**: The first one
+    **KaggleMateAI**: Here is a summary of the problem tackled here, and why it is linked to your problem [description]
+    Here is also the list of possible solutions    
+    [solution name - URL]
+    ...
+    **You**: Tell me more about solution 2
+    **KaggleMateAi"**: [description + step by step with code to apply to your problem]
+    
 ### License
 
 This project is licensed under the MIT License - see the LICENSE.md file for details.
