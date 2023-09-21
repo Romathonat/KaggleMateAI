@@ -12,6 +12,10 @@ kaggle = "^1.5.16"
 ipykernel = "^6.25.2"
 langchain = {extras = ["llms"], version = "^0.0.288"}
 pandas = "^2.1.0"
+playwright = "^1.38.0"
+nest-asyncio = "^1.5.8"
+selenium = "^4.12.0"
+beautifulsoup4 = "^4.12.2"
 
 
 [build-system]

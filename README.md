@@ -19,6 +19,8 @@ KaggleMateAI is an open-source tool designed to assist data scientists and machi
 git clone https://github.com/romathonat/KaggleMateAI.git
 cd KaggleMateAI
 pip install -r requirements.txt
+playwright install
+playwrith install-deps
 ```
 
 ## Usage
@@ -43,7 +45,7 @@ Example interaction:
     ...
     **You**: Tell me more about solution 2
     **KaggleMateAi"**: [description + step by step with code to apply to your problem]
-    
+
 ### License
 
 This project is licensed under the MIT License - see the LICENSE.md file for details.
