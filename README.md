@@ -43,7 +43,7 @@ Example interaction:
     ...
     **You**: Tell me more about solution 2
     **KaggleMateAi"**: [description + step by step with code to apply to your problem]
-    
+
 ### License
 
 This project is licensed under the MIT License - see the LICENSE.md file for details.
