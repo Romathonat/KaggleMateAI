@@ -4,7 +4,7 @@ import zipfile
 from kmai.ports.ikaggle_downloader import IKaggleDownloader
 
 
-class StubKaggleDownloader(IKaggleDownloader):
+class KaggleDownloader(IKaggleDownloader):
     def download_data(self) -> tuple[pd.DataFrame, pd.DataFrame]:
         COMPETITION = "Competitions"
         FORUMS = "ForumTopics"
@@ -22,8 +22,8 @@ class StubKaggleDownloader(IKaggleDownloader):
         self.extract_zip(COMPETITION)
         self.extract_zip(FORUMS)
 
-        df_comp = pd.read_csv(f"{COMPETITION}.csv")
-        df_topics = pd.read_csv(f"{FORUMS}.csv")
+        df_comp = pd.read_csv(f"./data/{COMPETITION}.csv")
+        df_topics = pd.read_csv(f"./data/{FORUMS}.csv")
 
         return df_comp, df_topics
 
@@ -33,3 +33,5 @@ class StubKaggleDownloader(IKaggleDownloader):
 
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
             zip_ref.extractall(extract_path)
+
+KaggleDownloader().download_data()
