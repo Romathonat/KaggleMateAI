@@ -4,9 +4,9 @@ from kmai.ports.icompetition_scrapper import ICompetitionScrapper
 from kmai.ports.icsv_writer import ICSVWriter
 from kmai.ports.ikaggle_downloader import IKaggleDownloader
 from kmai.ports.illm_caller import ILLMCaller
+from kmai.config import settings
 
-
-def get_competitions_embedding_csv(
+def create_competitions_embedding_csv(
     kaggle_downloader: IKaggleDownloader,
     competition_scrapper: ICompetitionScrapper,
     llm_caller: ILLMCaller,
@@ -14,7 +14,12 @@ def get_competitions_embedding_csv(
 ) -> pd.DataFrame:
     comp_df, comp_forums = kaggle_downloader.download_data()
     comp_df["url"] = [f"https://www.kaggle.com/c/{slug}" for slug in comp_df["Slug"]]
+
+    comp_df = comp_df.head(settings.INITIAL_COMPETITION_NUMBER)
+
     comp_df["description"] = [competition_scrapper.get_competition_text(url) for url in comp_df["url"]]
     comp_df["desc_embedding"] = llm_caller.get_embeddings(comp_df["description"].tolist())
+
+    csv_writer.write_csv(comp_df, "./data/competition_with_embeddings.csv")
 
     return comp_df
