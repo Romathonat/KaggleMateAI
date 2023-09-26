@@ -3,7 +3,7 @@ from kmai.adapters.stubs.stub_kaggle_dowloader import StubKaggleDownloader
 from kmai.adapters.stubs.stub_llm_caller import StubLLMCaller
 from kmai.adapters.stubs.stub_competition_scrapper import StubCompetitionScrapper
 from kmai.adapters.stubs.stub_csv_reader import StubCSVReader
-from kmai.use_cases.get_competitions import create_competitions_embedding_csv
+from kmai.use_cases.get_competitions import create_competitions_embedding_csv, update_competitions_embedding
 
 from kmai.config import settings
 
