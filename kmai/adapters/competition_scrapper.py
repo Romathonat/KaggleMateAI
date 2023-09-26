@@ -17,10 +17,13 @@ class CompetitionScrapper(ICompetitionScrapper):
         self.driver.quit()
 
     def get_competition_text(self, url: str) -> str:
+        print(url)
         self.driver.get(url)
         WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.ID, "background"))
+            # EC.presence_of_element_located((By.ID, "background"))
+            EC.presence_of_element_located((By.CLASS_NAME, "sc-fOVJBw"))
         )
-        soup = BeautifulSoup(self.driver.page_source, 'html.parser').find("div", {"id": "background"}).find_parent("div")
+        # soup = BeautifulSoup(self.driver.page_source, 'html.parser').find("div", {"id": "background"}).find_parent("div")
+        soup = BeautifulSoup(self.driver.page_source, 'html.parser').find("div", class_="sc-fOVJBw")
         return soup.get_text()
 
