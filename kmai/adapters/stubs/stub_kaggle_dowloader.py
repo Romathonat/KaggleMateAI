@@ -1,9 +1,9 @@
 import pandas as pd
 
-from kmai.ports.kaggle_downloader import KaggleDownloader
+from kmai.ports.ikaggle_downloader import IKaggleDownloader
 
 
-class StubKaggleDownloader(KaggleDownloader):
+class StubKaggleDownloader(IKaggleDownloader):
     def download_data(self) -> tuple[pd.DataFrame, pd.DataFrame]:
         df_comp = pd.DataFrame(
             {"Id": [1], "Slug": ["Eurovision2010"], "ForumId": [1], "Title": ["Eurovision Prediction Competition"]}

@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 import pandas as pd
 
 
-class CSVWriter(ABC):
+class ICompetitionScrapper(ABC):
     @abstractmethod
-    def write_csv(self, df: pd.DataFrame) -> bool:
+    def get_competition_text(self, url: str) -> str:
         pass

@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 import pandas as pd
 
 
-class LLMCaller(ABC):
+class ICSVWriter(ABC):
     @abstractmethod
-    def get_embedings(self, text_list: list[str]) -> list[list]:
+    def write_csv(self, df: pd.DataFrame, path: str) -> bool:
         pass

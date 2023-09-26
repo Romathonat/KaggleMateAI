@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 import pandas as pd
 
 
-class CompetitionScrapper(ABC):
+class ILLMCaller(ABC):
     @abstractmethod
-    def get_competition_text(self, url: str) -> str:
+    def get_embeddings(self, text_list: list[str]) -> list[list]:
         pass
