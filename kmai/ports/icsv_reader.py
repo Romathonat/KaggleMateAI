@@ -5,5 +5,5 @@ import pandas as pd
 
 class ICSVReader(ABC):
     @abstractmethod
-    def read_csv(self, path: str) -> bool:
+    def read_csv(self, path: str) -> pd.DataFrame:
         pass
