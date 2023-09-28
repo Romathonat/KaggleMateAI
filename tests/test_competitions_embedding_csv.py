@@ -41,7 +41,7 @@ def test_update_competitions_csv():
     df_after_comp, df_after_topics = update_competion_csv(StubKaggleDownloader(), StubCSVReader(), StubCSVWriter())
 
     assert len(df_after_comp) > len(df_init_comp)
-    assert isinstance(df_after_comp["desc_embeding"].iloc[0], list)
-    assert df_after_comp["desc_embeding"].iloc[-1] is None
+    assert isinstance(df_after_comp["desc_embedding"].iloc[0], list)
+    assert df_after_comp["desc_embedding"].iloc[-1] is None
 
     assert len(df_after_topics) > 0

@@ -18,13 +18,12 @@ def create_competitions_embedding_csv(
     Download the competition file and create the COMPETITIONS_WITH_EMBEDDINGS file. Populate the first INITIAL_COMPETITION_NUMBER_TO_EMBED embeddings
     """
     comp_df, comp_forums = kaggle_downloader.download_data()
-    comp_df["url"] = [url_builder(slug) for slug in comp_df["Slug"]]
     comp_df["description"] = None
     comp_df["desc_embedding"] = None
 
     comp_df_head = comp_df.head(settings.INITIAL_COMPETITION_NUMBER_TO_EMBED).copy()
-
-    comp_df_head["description"] = [competition_scrapper.get_competition_text(url) for url in comp_df_head["url"]]
+    urls = [url_builder(slug) for slug in comp_df_head["Slug"]]
+    comp_df_head["description"] = [competition_scrapper.get_competition_text(url) for url in urls]
     comp_df_head["desc_embedding"] = llm_caller.get_embeddings(comp_df_head["description"].tolist())
 
     comp_df.update(comp_df_head)
