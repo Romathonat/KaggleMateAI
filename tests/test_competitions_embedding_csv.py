@@ -8,12 +8,13 @@ from kmai.adapters.stubs.stub_llm_caller import StubLLMCaller
 from kmai.config import settings
 from kmai.use_cases.get_competitions import (
     create_competitions_embedding_csv,
+    update_competion_csv,
     update_competitions_embedding,
 )
 
 
 @patch("kmai.config.settings.INITIAL_COMPETITION_NUMBER_TO_EMBED", new=2)
-def test_create_competitions_embedding_csv_simple():
+def test_create_competitions_embedding_csv():
     df = create_competitions_embedding_csv(
         StubKaggleDownloader(), StubCompetitionScrapper(), StubLLMCaller(), StubCSVWriter()
     )
@@ -32,3 +33,15 @@ def test_update_competitions_embedding_csv():
     assert "desc_embedding" in df
     assert all(isinstance(item, str) for item in df["description"])
     assert all(isinstance(item, list) for item in df["desc_embedding"])
+
+
+def test_update_competitions_csv():
+    df_init_comp = StubCSVReader().read_csv("Competition.csv")
+    df_init_topics = StubCSVReader().read_csv("Topics.csv")
+    df_after_comp, df_after_topics = update_competion_csv(StubKaggleDownloader(), StubCSVReader(), StubCSVWriter())
+
+    assert len(df_after_comp) > len(df_init_comp)
+    assert isinstance(df_after_comp["desc_embeding"].iloc[0], list)
+    assert df_after_comp["desc_embeding"].iloc[-1] is None
+
+    assert len(df_after_topics) > 0

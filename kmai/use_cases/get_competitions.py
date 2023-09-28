@@ -57,3 +57,18 @@ def update_competitions_embedding(
             )
 
     return comp_with_embedding_df
+
+
+def update_competion_csv(kaggle_downloader: IKaggleDownloader, csv_reader: ICSVReader, csv_writer: ICSVWriter):
+    df_comp_new, df_topic_new = kaggle_downloader.download_data()
+    df_comp_embedding_to_update = csv_reader.read_csv(f"{settings.DATA_DIR} / {settings.COMPETITIONS_CSV}")
+
+    df_comp_new["description"] = None
+    df_comp_new["desc_embedding"] = None
+
+    df_out_comp = pd.concat([df_comp_embedding_to_update, df_comp_new])
+    df_out_comp.drop_duplicates(subset=["Id"], keep="first", inplace=True)
+
+    csv_writer.write_csv(df_out_comp, f"{settings.DATA_DIR} / {settings.COMPETITIONS_WITH_EMBEDDINGS}")
+
+    return df_out_comp, df_topic_new

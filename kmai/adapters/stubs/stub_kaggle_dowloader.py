@@ -7,17 +7,17 @@ class StubKaggleDownloader(IKaggleDownloader):
     def download_data(self) -> tuple[pd.DataFrame, pd.DataFrame]:
         df_comp = pd.DataFrame(
             {
-                "Id": [1] * 10,
+                "Id": [i for i in range(10)],
                 "Slug": ["Eurovision2010"] * 10,
-                "ForumId": [1] * 10,
-                "Title": ["Eurovision Prediction Competition"] * 10,
+                "ForumId": [i for i in range(10)],
+                "Title": [f"Title{i}" for i in range(10)],
             }
         )
 
         df_topics = pd.DataFrame(
             {
-                "Id": [1] * 10,
-                "ForumId": [1] * 10,
+                "Id": [i for i in range(10)],
+                "ForumId": [i for i in range(10)],
                 "Score": [12] * 10,
                 "TotalMessages": [4] * 10,
                 "TotalReplies": [3] * 10,

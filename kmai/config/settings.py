@@ -7,3 +7,5 @@ INITIAL_COMPETITION_NUMBER_TO_EMBED = 10
 BATCH_SIZE = 20
 COMPETITIONS_WITH_EMBEDDINGS = "competitions_with_embeddings"
 KAGGLE_URL = "https://www.kaggle.com/c/"
+COMPETITIONS_CSV = "Competitions.csv"
+FORUMS_CSV = "Forums.csv"
