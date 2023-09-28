@@ -14,5 +14,6 @@ class StubCSVReader(ICSVReader):
                 "desc_embedding": [[1.3, 2.5, 0.2], None, None],
                 "description": ["description", None, None],
                 "Slug": ["slug1", "slug2", "slug3"],
+                "url": ["my_url", None, None],
             }
         )

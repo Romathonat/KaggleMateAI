@@ -6,7 +6,7 @@ from kmai.adapters.csv_writer import CSVWriter
 from kmai.adapters.kaggle_downloader import KaggleDownloader
 from kmai.adapters.llm_caller import LLMCaller
 from kmai.config import settings
-from kmai.use_cases.get_competitions import (
+from kmai.use_cases.data_preprocessing import (
     create_competitions_embedding_csv,
     update_competion_csv,
     update_competitions_embedding,

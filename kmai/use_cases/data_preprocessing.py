@@ -20,10 +20,11 @@ def create_competitions_embedding_csv(
     comp_df, comp_forums = kaggle_downloader.download_data()
     comp_df["description"] = None
     comp_df["desc_embedding"] = None
+    comp_df["url"] = None
 
     comp_df_head = comp_df.head(settings.INITIAL_COMPETITION_NUMBER_TO_EMBED).copy()
-    urls = [url_builder(slug) for slug in comp_df_head["Slug"]]
-    comp_df_head["description"] = [competition_scrapper.get_competition_text(url) for url in urls]
+    comp_df_head["url"] = [url_builder(slug) for slug in comp_df_head["Slug"]]
+    comp_df_head["description"] = [competition_scrapper.get_competition_text(url) for url in comp_df_head["url"]]
     comp_df_head["desc_embedding"] = llm_caller.get_embeddings(comp_df_head["description"].tolist())
 
     comp_df.update(comp_df_head)
@@ -45,6 +46,7 @@ def update_competitions_embedding(
 
     for i, (index, row) in enumerate(comp_with_embedding_df_filtered.iterrows()):
         url = url_builder(comp_with_embedding_df_filtered.at[index, "Slug"])
+        comp_with_embedding_df.at[index, "url"] = url
         comp_with_embedding_df.at[index, "description"] = competition_scrapper.get_competition_text(url)
         comp_with_embedding_df.at[index, "desc_embedding"] = llm_caller.get_embeddings(
             [comp_with_embedding_df.at[index, "description"]]

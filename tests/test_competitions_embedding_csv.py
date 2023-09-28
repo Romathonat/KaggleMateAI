@@ -6,7 +6,7 @@ from kmai.adapters.stubs.stub_csv_writer import StubCSVWriter
 from kmai.adapters.stubs.stub_kaggle_dowloader import StubKaggleDownloader
 from kmai.adapters.stubs.stub_llm_caller import StubLLMCaller
 from kmai.config import settings
-from kmai.use_cases.get_competitions import (
+from kmai.use_cases.data_preprocessing import (
     create_competitions_embedding_csv,
     update_competion_csv,
     update_competitions_embedding,
@@ -33,6 +33,8 @@ def test_update_competitions_embedding_csv():
     assert "desc_embedding" in df
     assert all(isinstance(item, str) for item in df["description"])
     assert all(isinstance(item, list) for item in df["desc_embedding"])
+    assert all(isinstance(item, str) for item in df["url"])
+    assert df.iloc[-1]["url"] == "https://www.kaggle.com/c/slug3"
 
 
 def test_update_competitions_csv():
