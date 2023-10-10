@@ -7,34 +7,31 @@ from kmai.adapters.stubs.stub_kaggle_dowloader import StubKaggleDownloader
 from kmai.adapters.stubs.stub_llm_caller import StubLLMCaller
 from kmai.config import settings
 from kmai.use_cases.data_preprocessing import (
-    create_competitions_embedding_csv,
+    create_competitions_csv,
     update_competion_csv,
-    update_competitions_embedding,
+    update_competitions_descriptions,
 )
 
 
-@patch("kmai.config.settings.INITIAL_COMPETITION_NUMBER_TO_EMBED", new=2)
-def test_create_competitions_embedding_csv():
-    df = create_competitions_embedding_csv(
-        StubKaggleDownloader(), StubCompetitionScrapper(), StubLLMCaller(), StubCSVWriter()
+@patch("kmai.config.settings.INITIAL_COMPETITION_NUMBER_TO_DESCRIBE", new=2)
+def test_create_competitions_csv():
+    df = create_competitions_csv(
+        StubKaggleDownloader(), StubCompetitionScrapper(), StubCSVWriter()
     )
 
-    df_embeddings = df[~df["desc_embedding"].isna()]
+    df_descriptions = df[~df["description"].isna()]
 
-    assert "desc_embedding" in df
-    assert len(df_embeddings) == settings.INITIAL_COMPETITION_NUMBER_TO_EMBED
-    assert len(df) >= settings.INITIAL_COMPETITION_NUMBER_TO_EMBED
-    assert all(isinstance(item, list) for item in df.iloc[:1]["desc_embedding"])
+    assert len(df_descriptions) == settings.INITIAL_COMPETITION_NUMBER_TO_DESCRIBE
+    assert len(df) >= settings.INITIAL_COMPETITION_NUMBER_TO_DESCRIBE
+    assert all(isinstance(item, str) for item in df_descriptions["description"])
 
 
-def test_update_competitions_embedding_csv():
-    df = update_competitions_embedding(StubCompetitionScrapper(), StubLLMCaller(), StubCSVReader(), StubCSVWriter())
+def test_update_competitions_descriptions():
+    df = update_competitions_descriptions(StubCompetitionScrapper(), StubCSVReader(), StubCSVWriter())
 
-    assert "desc_embedding" in df
     assert all(isinstance(item, str) for item in df["description"])
-    assert all(isinstance(item, list) for item in df["desc_embedding"])
     assert all(isinstance(item, str) for item in df["url"])
-    assert df.iloc[-1]["url"] == "https://www.kaggle.com/c/slug3"
+    assert df.iloc[-1]["url"].startswith(settings.KAGGLE_URL)
 
 
 def test_update_competitions_csv():
