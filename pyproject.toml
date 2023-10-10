@@ -20,6 +20,7 @@ openai = "^0.28.0"
 chromadb = "^0.4.12"
 tiktoken = "^0.5.1"
 pytest = "^7.4.2"
+faiss-cpu = "^1.7.4"
 
 
 [build-system]
