@@ -1,9 +1,9 @@
 from langchain.vectorstores import FAISS
 from langchain.embeddings.openai import OpenAIEmbeddings
 
-from kmai.ports.ivectorstore import IVectorStore
+from kmai.ports.ivectorstore_helper import IVectorStoreHelper
 
-class FAISS(IVectorStore):
+class FAISS(IVectorStoreHelper):
     def read_vectorstore(self, path: str):
         embeddings = OpenAIEmbeddings()
         db = FAISS.load_local(path, embeddings)

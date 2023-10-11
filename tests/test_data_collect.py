@@ -18,6 +18,7 @@ def test_update_competitions_descriptions():
 
     assert all(isinstance(item, str) for item in df["description"])
     assert all(isinstance(item, str) for item in df["url"])
+    assert "date_to_datastore" in df
     assert df.iloc[-1]["url"].startswith(settings.KAGGLE_URL)
 
 
@@ -32,3 +33,4 @@ def test_update_competitions_csv():
     assert len(df_after_comp) > len(df_init_comp)
     assert df_after_comp["description"].iloc[-1] == ""
     assert len(df_after_topics) > 0
+    assert "date_to_datastore" in df_after_comp

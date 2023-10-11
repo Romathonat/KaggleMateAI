@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 
 
-class IVectorStore(ABC):
+class IVectorStoreHelper(ABC):
     @abstractmethod
     def read_vectorstore(self, path: str):
         pass

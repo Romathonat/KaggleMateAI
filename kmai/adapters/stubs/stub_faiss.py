@@ -2,10 +2,10 @@ from langchain.vectorstores import FAISS
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.schema import Document
 
-from kmai.ports.ivectorstore import IVectorStore
+from kmai.ports.ivectorstore_helper import IVectorStoreHelper
 import pandas as pd
 
-class StubFAISS(IVectorStore):
+class StubFAISSFromScratch(IVectorStoreHelper):
     def read_vectorstore(self, path: str):
         pass
 

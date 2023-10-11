@@ -20,6 +20,7 @@ def update_competitions_descriptions(
     comp_df = csv_reader.read_csv(f"{settings.DATA_DIR / settings.COMPETITIONS_WITH_DESCRIPTIONS}")
     comp_df['description'] = comp_df['description'].astype('object')
     comp_df['url'] = comp_df['url'].astype('object')
+    comp_df["date_to_datastore"] = ''
 
     for i, (index, description) in enumerate(zip(comp_df.index, comp_df["description"])):
         if pd.notna(description):
@@ -46,7 +47,7 @@ def update_competitions_csv(kaggle_downloader: IKaggleDownloader, csv_reader: IC
     
     df_comp_new["description"] = ''
     df_comp_new["url"] = ''
-
+    df_comp_new["date_to_datastore"] = ''
     df_out_comp = pd.concat([df_comp_to_update, df_comp_new])
     df_out_comp.drop_duplicates(subset=["Id"], keep="first", inplace=True)
     df_out_comp.reset_index(drop=True, inplace=True)
