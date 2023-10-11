@@ -8,7 +8,7 @@ from kmai.adapters.stubs.stub_llm_caller import StubLLMCaller
 from kmai.config import settings
 from kmai.use_cases.data_preprocessing import (
     create_competitions_csv,
-    update_competion_csv,
+    update_competitions_csv,
     update_competitions_descriptions,
 )
 
@@ -19,7 +19,7 @@ def test_create_competitions_csv():
         StubKaggleDownloader(), StubCompetitionScrapper(), StubCSVWriter()
     )
 
-    df_descriptions = df[~df["description"].isna()]
+    df_descriptions = df[df["description"] != ""]
 
     assert len(df_descriptions) == settings.INITIAL_COMPETITION_NUMBER_TO_DESCRIBE
     assert len(df) >= settings.INITIAL_COMPETITION_NUMBER_TO_DESCRIBE
@@ -36,11 +36,14 @@ def test_update_competitions_descriptions():
 
 def test_update_competitions_csv():
     df_init_comp = StubCSVReader().read_csv("Competition.csv")
-    df_init_topics = StubCSVReader().read_csv("Topics.csv")
-    df_after_comp, df_after_topics = update_competion_csv(StubKaggleDownloader(), StubCSVReader(), StubCSVWriter())
+    df_download_comp, _ = StubKaggleDownloader().download_data()
+    df_after_comp, df_after_topics = update_competitions_csv(StubKaggleDownloader(), StubCSVReader(), StubCSVWriter())
 
+    print(df_after_comp["Title"])
+
+    assert df_after_comp.iloc[0]["Title"] == df_init_comp.iloc[0]["Title"]
+    assert df_download_comp.iloc[1]["Title"] not in df_after_comp["Title"]
+    assert "url" in df_after_comp
     assert len(df_after_comp) > len(df_init_comp)
-    assert isinstance(df_after_comp["desc_embedding"].iloc[0], list)
-    assert df_after_comp["desc_embedding"].iloc[-1] is None
-
+    assert df_after_comp["description"].iloc[-1] == ""
     assert len(df_after_topics) > 0
