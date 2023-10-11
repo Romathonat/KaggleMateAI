@@ -21,6 +21,12 @@ class StubCSVHandler(ICSVHandler):
     def write_csv(self, df: pd.DataFrame, path: str) -> bool:
         return True
 
+    def exists(self, path: str) -> bool:
+        return True
+    
+    def remove(self, path: str) -> None:
+        pass
+
 
 class StubCSVHandler2(ICSVHandler):
     def read_csv(self, path: str) -> pd.DataFrame:
@@ -37,3 +43,9 @@ class StubCSVHandler2(ICSVHandler):
         )
     def write_csv(self, df: pd.DataFrame, path: str) -> bool:
         return True
+
+    def exists(self, path: str) -> bool:
+        return True
+    
+    def remove(self, path: str) -> None:
+        pass

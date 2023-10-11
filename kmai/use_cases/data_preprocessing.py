@@ -39,14 +39,17 @@ def update_competitions_descriptions(
 
 def update_competitions_csv(kaggle_downloader: IKaggleDownloader, csv_handler: ICSVHandler):
     df_comp_new, df_topic_new = kaggle_downloader.download_data()
-    if os.path.exists(f"{settings.DATA_DIR / settings.COMPETITIONS_WITH_DESCRIPTIONS}"):
+    if csv_handler.exists(f"{settings.DATA_DIR / settings.COMPETITIONS_WITH_DESCRIPTIONS}"):
         df_comp_to_update = csv_handler.read_csv(f"{settings.DATA_DIR / settings.COMPETITIONS_WITH_DESCRIPTIONS}")
     else:
         df_comp_to_update = df_comp_new.copy()
+    
+    csv_handler.remove(f"{settings.DATA_DIR / settings.COMPETITIONS_CSV}")
      
     df_comp_new["description"] = ''
     df_comp_new["url"] = ''
     df_comp_new["date_to_datastore"] = ''
+    
     df_out_comp = pd.concat([df_comp_to_update, df_comp_new])
     df_out_comp.drop_duplicates(subset=["Id"], keep="first", inplace=True)
     df_out_comp.reset_index(drop=True, inplace=True)

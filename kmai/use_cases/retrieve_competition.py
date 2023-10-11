@@ -16,7 +16,7 @@ class VectorStoreWrapper:
 
     def create_vector_store(self):
         df = self.csv_handler.read_csv(settings.DATA_DIR / settings.COMPETITIONS_WITH_DESCRIPTIONS)
-        df_unseen = df[df['date_to_datastore'].isna()]
+        df_unseen = df[df['date_to_datastore'].isna() & ~df['description'].isna()]
         doc_list = []
         current_date = datetime.now().date()
 
@@ -25,12 +25,20 @@ class VectorStoreWrapper:
 
         df_unseen['date_to_datastore'] = current_date
         df.update(df_unseen)
-
         self.csv_handler.write_csv(df, settings.DATA_DIR/settings.COMPETITIONS_WITH_DESCRIPTIONS)
-        return self.vectorstore_helper.create_vectorstore(doc_list)
+
+        existing_vectorstore = self.vectorstore_helper.read_vectorstore(settings.FAISS_DIR)
+        
+        if doc_list:
+            if existing_vectorstore:
+                return self.vectorstore_helper.add_doc_to_vectorstore(existing_vectorstore, doc_list)
+            return self.vectorstore_helper.create_vectorstore(doc_list)
+        
+        return existing_vectorstore
 
 
     def get_similar_competitions(self, description: str, k: int) -> pd.DataFrame:
+        print(description)
         documents = self.vectorstore_helper.similarity_search(self.vectorstore, description, k)
         data = {
             "Title": [],
@@ -39,12 +47,14 @@ class VectorStoreWrapper:
         }
 
         for doc in documents:
+            print(doc)
             data["Description"].append(doc.page_content)
             data["Title"].append(doc.metadata["Title"])
             data["Url"].append(doc.metadata["Url"])
 
         return pd.DataFrame(data=data)
-
+    
+    
     
 
 def create_vector_store(csv_handler: ICSVHandler, vectorstore: IVectorStoreHelper) -> VectorStoreWrapper:
