@@ -1,30 +1,31 @@
 from langchain.vectorstores import Chroma
+import pandas as pd
 
 from kmai.config import settings
 from kmai.ports.icsv_reader import ICSVReader
-from kmai.ports.illm_caller import ILLMCaller
+from kmai.ports.icsv_writer import ICSVWriter
+from kmai.ports.ivectorstore import IVectorStore
 
-
-class VectorStore:
-    def __init__(self, csv_reader: ICSVReader, llm_caller: ILLMCaller):
+class VectorStoreWrapper:
+    def __init__(self, csv_reader: ICSVReader, csv_writer: ICSVWriter, vectorstore: IVectorStore):
         self.csv_reader = csv_reader
-        self.llm_caller = llm_caller
-        # self.db = self.load_db()
+        self.csv_writer = csv_writer
+        self.vectorstore = vectorstore
 
-    # def load_db(self):
-    #     embeddings_dict = self.csv_reader.read_csv(f"{settings.DATA_DIR} / {settings.COMPETITIONS_WITH_EMBEDDINGS}")
+    def get_similar_competitions(self, description: str, k: int) -> pd.DataFrame:
+        documents = self.vectorstore.similarity_search(self.vectorstore, description, k)
+        data = {
+            "Title": [],
+            "Description": [],
+            "Url": []
+        }
 
-    # def get_similar_competitions(self, description, n):
-    #     vector = self.llm_caller.get_embeddings(description)
-    #     similar_items = self.db.query(vector, topn=n)
+        for doc in documents:
+            data["Title"].append(doc.metadata["Title"])
+            data["Description"].append(doc.metadata["Description"])
+            data["Url"].append(doc.metadata["Url"])
 
-    #     result = {
-    #         "Title": [item["Title"] for item in similar_items],
-    #         "Description": [item["Description"] for item in similar_items],
-    #         "Url": [item["Url"] for item in similar_items],
-    #     }
-    #     return result
+        return pd.DataFrame(data=data)
 
-
-def create_vector_store(csv_reader, llm_caller):
-    return VectorStore(csv_reader, llm_caller)
+def create_vector_store(csv_reader: ICSVReader, csv_writer: ICSVWriter, vectorstore: IVectorStore) -> VectorStoreWrapper:
+    return VectorStoreWrapper(csv_reader, csv_writer, vectorstore)
