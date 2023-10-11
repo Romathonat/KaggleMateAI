@@ -3,21 +3,19 @@ import pandas as pd
 from datetime import datetime
 
 from kmai.config import settings
-from kmai.ports.icsv_reader import ICSVReader
-from kmai.ports.icsv_writer import ICSVWriter
+from kmai.ports.icsv_handler import ICSVHandler 
 from kmai.ports.ivectorstore_helper import IVectorStoreHelper
 
 from langchain.schema import Document
 
 class VectorStoreWrapper:
-    def __init__(self, csv_reader: ICSVReader, csv_writer: ICSVWriter, vectorstore_helper: IVectorStoreHelper):
-        self.csv_reader = csv_reader
-        self.csv_writer = csv_writer
+    def __init__(self, csv_handler: ICSVHandler, vectorstore_helper: IVectorStoreHelper):
+        self.csv_handler = csv_handler
         self.vectorstore_helper = vectorstore_helper
         self.vectorstore = self.create_vector_store()
 
     def create_vector_store(self):
-        df = self.csv_reader.read_csv(settings.DATA_DIR / settings.COMPETITIONS_WITH_DESCRIPTIONS)
+        df = self.csv_handler.read_csv(settings.DATA_DIR / settings.COMPETITIONS_WITH_DESCRIPTIONS)
         df_unseen = df[df['date_to_datastore'].isna()]
         doc_list = []
         current_date = datetime.now().date()
@@ -28,7 +26,7 @@ class VectorStoreWrapper:
         df_unseen['date_to_datastore'] = current_date
         df.update(df_unseen)
 
-        self.csv_writer.write_csv(df, settings.DATA_DIR/settings.COMPETITIONS_WITH_DESCRIPTIONS)
+        self.csv_handler.write_csv(df, settings.DATA_DIR/settings.COMPETITIONS_WITH_DESCRIPTIONS)
         return self.vectorstore_helper.create_vectorstore(doc_list)
 
 
@@ -49,5 +47,5 @@ class VectorStoreWrapper:
 
     
 
-def create_vector_store(csv_reader: ICSVReader, csv_writer: ICSVWriter, vectorstore: IVectorStoreHelper) -> VectorStoreWrapper:
-    return VectorStoreWrapper(csv_reader, csv_writer, vectorstore)
+def create_vector_store(csv_handler: ICSVHandler, vectorstore: IVectorStoreHelper) -> VectorStoreWrapper:
+    return VectorStoreWrapper(csv_handler, vectorstore)

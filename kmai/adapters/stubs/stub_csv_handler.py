@@ -1,10 +1,10 @@
 import pandas as pd
 
 from kmai.config import settings
-from kmai.ports.icsv_reader import ICSVReader
+from kmai.ports.icsv_handler import ICSVHandler
 
 
-class StubCSVReader(ICSVReader):
+class StubCSVHandler(ICSVHandler):
     def read_csv(self, path: str) -> pd.DataFrame:
         return pd.DataFrame(
             {
@@ -17,8 +17,12 @@ class StubCSVReader(ICSVReader):
                 "date_to_datastore": [None, None, None]
             }
         )
+    
+    def write_csv(self, df: pd.DataFrame, path: str) -> bool:
+        return True
 
-class StubCSVReader2(ICSVReader):
+
+class StubCSVHandler2(ICSVHandler):
     def read_csv(self, path: str) -> pd.DataFrame:
         return pd.DataFrame(
             {
@@ -31,3 +35,5 @@ class StubCSVReader2(ICSVReader):
                 "date_to_datastore": [None, None, None]
             }
         )
+    def write_csv(self, df: pd.DataFrame, path: str) -> bool:
+        return True
