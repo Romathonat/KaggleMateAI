@@ -1,3 +1,4 @@
+from langchain import FAISS
 from langchain.vectorstores import Chroma
 import pandas as pd
 from datetime import datetime
@@ -36,9 +37,10 @@ class VectorStoreWrapper:
         
         return existing_vectorstore
 
+    def save_vector_store(self):
+        self.vectorstore_helper.write_vectorstore(self.vectorstore, settings.FAISS_DIR)
 
     def get_similar_competitions(self, description: str, k: int) -> pd.DataFrame:
-        print(description)
         documents = self.vectorstore_helper.similarity_search(self.vectorstore, description, k)
         data = {
             "Title": [],
@@ -47,7 +49,6 @@ class VectorStoreWrapper:
         }
 
         for doc in documents:
-            print(doc)
             data["Description"].append(doc.page_content)
             data["Title"].append(doc.metadata["Title"])
             data["Url"].append(doc.metadata["Url"])
