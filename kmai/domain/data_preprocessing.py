@@ -1,9 +1,9 @@
 import logging
 
 import pandas as pd
+from selenium.common.exceptions import TimeoutException
 
 from kmai.config import settings
-from kmai.ports.icompetition_scrapper import ICompetitionScrapper
 from kmai.ports.icsv_handler import ICSVHandler
 from kmai.ports.ikaggle_downloader import IKaggleDownloader
 
@@ -12,32 +12,40 @@ def url_builder(slug: str) -> str:
     return f"{settings.KAGGLE_URL}{slug}"
 
 
-def update_competitions_descriptions(
-    competition_scrapper: ICompetitionScrapper, csv_handler: ICSVHandler
-):
+def get_description(competition_scrapper, url):
+    try:
+        return competition_scrapper.get_competition_text(url)
+    except TimeoutException:
+        return None
+
+
+def update_competitions_descriptions(competition_scrapper, csv_handler):
     comp_df = csv_handler.read_csv(
-        f"{settings.DATA_DIR / settings.COMPETITIONS_WITH_DESCRIPTIONS}"
+        settings.DATA_DIR / settings.COMPETITIONS_WITH_DESCRIPTIONS
     )
     comp_df["description"] = comp_df["description"].astype("object")
     comp_df["url"] = comp_df["url"].astype("object")
-    comp_df["date_to_datastore"] = ""
 
-    for i, (index, description) in enumerate(
-        zip(comp_df.index, comp_df["description"])
-    ):
-        if pd.notna(description):
-            continue
+    indices_to_update = [
+        index
+        for index, description in zip(comp_df.index, comp_df["description"])
+        if pd.isna(description)
+    ]
+
+    for i, index in enumerate(indices_to_update):
         url = url_builder(comp_df.at[index, "Slug"])
         comp_df.at[index, "url"] = url
-        comp_df.at[index, "description"] = competition_scrapper.get_competition_text(
-            url
-        )
+
+        description = get_description(competition_scrapper, url)
+        if description is None:
+            continue
+
+        comp_df.at[index, "description"] = description
 
         if i % settings.BATCH_SIZE == 0:
             logging.info(f"Processing batch {i // settings.BATCH_SIZE + 1}")
             csv_handler.write_csv(
-                comp_df,
-                f"{settings.DATA_DIR / settings.COMPETITIONS_WITH_DESCRIPTIONS}",
+                comp_df, settings.DATA_DIR / settings.COMPETITIONS_WITH_DESCRIPTIONS
             )
 
     return comp_df
@@ -47,16 +55,14 @@ def update_competitions_csv(
     kaggle_downloader: IKaggleDownloader, csv_handler: ICSVHandler
 ):
     df_comp_new, df_topic_new = kaggle_downloader.download_data()
-    if csv_handler.exists(
-        f"{settings.DATA_DIR / settings.COMPETITIONS_WITH_DESCRIPTIONS}"
-    ):
+    if csv_handler.exists(settings.DATA_DIR / settings.COMPETITIONS_WITH_DESCRIPTIONS):
         df_comp_to_update = csv_handler.read_csv(
-            f"{settings.DATA_DIR / settings.COMPETITIONS_WITH_DESCRIPTIONS}"
+            settings.DATA_DIR / settings.COMPETITIONS_WITH_DESCRIPTIONS
         )
     else:
         df_comp_to_update = df_comp_new.copy()
 
-    csv_handler.remove(f"{settings.DATA_DIR / settings.COMPETITIONS_CSV}")
+    csv_handler.remove(settings.DATA_DIR / settings.COMPETITIONS_CSV)
 
     df_comp_new["description"] = ""
     df_comp_new["url"] = ""
@@ -67,8 +73,8 @@ def update_competitions_csv(
     df_out_comp.reset_index(drop=True, inplace=True)
 
     csv_handler.write_csv(
-        df_out_comp, f"{settings.DATA_DIR / settings.COMPETITIONS_WITH_DESCRIPTIONS}"
+        df_out_comp, settings.DATA_DIR / settings.COMPETITIONS_WITH_DESCRIPTIONS
     )
-    csv_handler.write_csv(df_topic_new, f"{settings.DATA_DIR / settings.FORUMS_CSV}")
+    csv_handler.write_csv(df_topic_new, settings.DATA_DIR / settings.FORUMS_CSV)
 
     return df_out_comp, df_topic_new

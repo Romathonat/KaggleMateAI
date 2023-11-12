@@ -1,4 +1,7 @@
-from kmai.adapters.stubs.stub_competition_scrapper import StubCompetitionScrapper
+from kmai.adapters.stubs.stub_competition_scrapper import (
+    StubCompetitionScrapper,
+    StubCompetitionScrapperErrorSelenium,
+)
 from kmai.adapters.stubs.stub_csv_handler import StubCSVHandler
 from kmai.adapters.stubs.stub_kaggle_dowloader import StubKaggleDownloader
 from kmai.config import settings
@@ -12,6 +15,16 @@ def test_update_competitions_descriptions():
     df = update_competitions_descriptions(StubCompetitionScrapper(), StubCSVHandler())
 
     assert all(isinstance(item, str) for item in df["description"])
+    assert all(isinstance(item, str) for item in df["url"])
+    assert "date_to_datastore" in df
+    assert df.iloc[-1]["url"].startswith(settings.KAGGLE_URL)
+
+
+def test_update_competitions_descriptions_bad_URL():
+    df = update_competitions_descriptions(
+        StubCompetitionScrapperErrorSelenium(), StubCSVHandler()
+    )
+    assert any(isinstance(item, str) for item in df["description"])
     assert all(isinstance(item, str) for item in df["url"])
     assert "date_to_datastore" in df
     assert df.iloc[-1]["url"].startswith(settings.KAGGLE_URL)
