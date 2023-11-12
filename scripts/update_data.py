@@ -1,11 +1,7 @@
-import os
-
 from kmai.adapters.competition_scrapper import CompetitionScrapper
-from kmai.adapters.csv_handler import CSVHandler 
+from kmai.adapters.csv_handler import CSVHandler
 from kmai.adapters.kaggle_downloader import KaggleDownloader
-from kmai.adapters.llm_caller import LLMCaller
-from kmai.config import settings
-from kmai.use_cases.data_preprocessing import (
+from kmai.domain.data_preprocessing import (
     update_competitions_csv,
     update_competitions_descriptions,
 )
