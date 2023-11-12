@@ -2,7 +2,7 @@ import re
 
 from kmai.adapters.stubs.stub_csv_handler import StubCSVHandler2
 from kmai.adapters.stubs.stub_faiss import StubFAISSFromScratch
-from kmai.use_cases.retrieve_competition import create_vector_store
+from kmai.domain.retrieve_competition import create_vector_store
 from kmai.config import settings
 
 def test_create_vector_store():

@@ -5,7 +5,7 @@ from kmai.adapters.stubs.stub_csv_handler import StubCSVHandler
 from kmai.adapters.stubs.stub_kaggle_dowloader import StubKaggleDownloader
 from kmai.adapters.stubs.stub_llm_caller import StubLLMCaller
 from kmai.config import settings
-from kmai.use_cases.data_preprocessing import (
+from kmai.domain.data_preprocessing import (
     update_competitions_csv,
     update_competitions_descriptions,
 )
