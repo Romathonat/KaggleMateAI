@@ -1,15 +1,11 @@
-from unittest.mock import patch
-
 from kmai.adapters.stubs.stub_competition_scrapper import StubCompetitionScrapper
 from kmai.adapters.stubs.stub_csv_handler import StubCSVHandler
 from kmai.adapters.stubs.stub_kaggle_dowloader import StubKaggleDownloader
-from kmai.adapters.stubs.stub_llm_caller import StubLLMCaller
 from kmai.config import settings
 from kmai.domain.data_preprocessing import (
     update_competitions_csv,
     update_competitions_descriptions,
 )
-
 
 
 def test_update_competitions_descriptions():
@@ -24,7 +20,9 @@ def test_update_competitions_descriptions():
 def test_update_competitions_csv():
     df_init_comp = StubCSVHandler().read_csv("Competition.csv")
     df_download_comp, _ = StubKaggleDownloader().download_data()
-    df_after_comp, df_after_topics = update_competitions_csv(StubKaggleDownloader(), StubCSVHandler())
+    df_after_comp, df_after_topics = update_competitions_csv(
+        StubKaggleDownloader(), StubCSVHandler()
+    )
 
     assert df_after_comp.iloc[0]["Title"] == df_init_comp.iloc[0]["Title"]
     assert df_download_comp.iloc[1]["Title"] not in df_after_comp["Title"]

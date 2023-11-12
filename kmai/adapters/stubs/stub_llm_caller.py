@@ -1,5 +1,3 @@
-import random
-
 import numpy as np
 
 from kmai.ports.illm_caller import ILLMCaller

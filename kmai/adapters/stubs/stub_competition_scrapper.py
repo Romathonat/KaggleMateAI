@@ -1,5 +1,3 @@
-import pandas as pd
-
 from kmai.ports.icompetition_scrapper import ICompetitionScrapper
 
 
