@@ -1,9 +1,8 @@
-import re
-
 from kmai.adapters.stubs.stub_csv_handler import StubCSVHandler2
 from kmai.adapters.stubs.stub_faiss import StubFAISSFromScratch
-from kmai.domain.retrieve_competition import create_vector_store
 from kmai.config import settings
+from kmai.domain.retrieve_competition import create_vector_store
+
 
 def test_create_vector_store():
     desc = "I want to forecast the weather for the next week, based on the informations I have of the 365 last days (Temperature, Hygrometry, etc.)"

@@ -40,7 +40,7 @@ python -m scripts.get_similar_competition
 TODO: make a CLI to make it more user friendly
 
 ## Technical implementation
-I tried to follow a Test Driven Developement approach, using a port-adapter / clean architecture to modularize the different parts (so that it is easy to use another LLM, for example)
+I tried to follow a Test Driven Developement approach, using a port-adapter / clean architecture to modularize the different parts. This makes it easier to replace them and to test the application using stubs to reduce coupling between tests and code.
 
 ### License
 

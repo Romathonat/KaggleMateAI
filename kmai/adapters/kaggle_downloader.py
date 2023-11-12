@@ -12,9 +12,17 @@ class KaggleDownloader(IKaggleDownloader):
     def download_data(self) -> tuple[pd.DataFrame, pd.DataFrame]:
         api = KaggleApi()
         api.authenticate()
-        
-        api.dataset_download_file("kaggle/meta-kaggle", file_name=f"{settings.COMPETITIONS_CSV}", path=settings.DATA_DIR)
-        api.dataset_download_file("kaggle/meta-kaggle", file_name=f"{settings.FORUMS_CSV}", path=settings.DATA_DIR)
+
+        api.dataset_download_file(
+            "kaggle/meta-kaggle",
+            file_name=f"{settings.COMPETITIONS_CSV}",
+            path=settings.DATA_DIR,
+        )
+        api.dataset_download_file(
+            "kaggle/meta-kaggle",
+            file_name=f"{settings.FORUMS_CSV}",
+            path=settings.DATA_DIR,
+        )
 
         self.extract_zip(settings.COMPETITIONS_CSV)
         self.extract_zip(settings.FORUMS_CSV)
