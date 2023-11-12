@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from pathlib import Path
 
 
 class IVectorStoreHelper(ABC):
@@ -7,15 +8,15 @@ class IVectorStoreHelper(ABC):
         pass
 
     @abstractmethod
-    def read_vectorstore(self, path: str):
+    def read_vectorstore(self, path: Path):
         pass
 
     @abstractmethod
-    def write_vectorstore(self, db, path: str):
-        pass 
+    def write_vectorstore(self, db, path: Path):
+        pass
 
     @abstractmethod
-    def similarity_search(self, db, text: str, k: int):
+    def similarity_search(self, db, text: str, k: int) -> list:
         pass
 
     @abstractmethod
