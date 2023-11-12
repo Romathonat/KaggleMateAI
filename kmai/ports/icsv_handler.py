@@ -11,3 +11,11 @@ class ICSVHandler(ABC):
     @abstractmethod
     def read_csv(self, path: str) -> pd.DataFrame:
         pass
+    
+    @abstractmethod
+    def exists(self, path: str) -> bool:
+        pass
+
+    @abstractmethod
+    def remove(self, path: str) -> bool:
+        pass
